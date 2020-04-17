@@ -15,7 +15,7 @@ app.get("/repositories", (request, response) => {
 
 app.post("/repositories", (request, response) => {
   const {title,url,techs} = request.body;
-  const newRepository = { id: uuid(), title, url: `http://github.com/${url}`, techs, likes: 0 };
+  const newRepository = { id: uuid(), title, url, techs, likes: 0 };
   repositories.push(newRepository)
   return response.json(newRepository)
 });
@@ -37,13 +37,15 @@ app.put("/repositories/:id", (request, response) => {
 
 app.delete("/repositories/:id", (request, response) => {
   const {id} = request.params;
-  const repositoryIndex = repositories.findIndex(repository=>repository.id===id)
+  const repositoryIndex = repositories.findIndex(repository=>
+    repository.id===id
+  )
   if(repositoryIndex<0){
     return response.status(400).json({
       error:'user not find'
     })
   }
-  repositories.splice(projectIndex,1)
+  repositories.splice(repositoryIndex,1)
   return response.status(204).send()
 });
 
@@ -55,7 +57,7 @@ app.post("/repositories/:id/like", (request, response) => {
       error:'user not find'
     })
   }
-  repositories[repositoryIndex] = {...repositories[repositoryIndex],like:repositories[repositoryIndex].like+=1}
+  repositories[repositoryIndex] = {...repositories[repositoryIndex],likes:repositories[repositoryIndex].likes+=1}
   return response.json(
     repositories[repositoryIndex]
   )
